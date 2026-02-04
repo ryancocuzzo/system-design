@@ -1,0 +1,37 @@
+---
+description: System design practice
+globs: ["**/*.md"]
+---
+
+# System Design Practice
+
+Exercises live in `exercises/NNN/` with two files:
+- `problem.md` — requirements and constraints
+- `design.md` — architecture, tradeoffs, failure modes, review feedback
+
+Evaluation uses `rubric.md` at repo root.
+
+## Commands
+
+### /new
+1. Find next number in `exercises/`
+2. Create `exercises/NNN/problem.md` with requirements
+3. Create empty `exercises/NNN/design.md`
+4. Display problem inline
+
+### /grade
+1. Read `problem.md` and `design.md`
+2. Score against `rubric.md`
+3. Append review to `design.md` under `## Review` section
+4. Include revision suggestions
+
+### /review
+1. Scan `design.md` files for `## Review` sections
+2. Report patterns across exercises
+
+## Problem Generation
+
+Include: context, functional requirements, non-functional requirements (with numbers), constraints.
+Do not include: solutions, architecture hints, tradeoffs.
+
+Categories: data systems, real-time systems, transactional systems, platform services, content systems.
