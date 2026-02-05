@@ -49,10 +49,33 @@ Do NOT gloss over points. If they mentioned something, examine it.
 
 ## Ideal System Architecture
 
-Provide an ASCII diagram or clear description of what a strong solution looks like:
-- Name the sub-systems and their responsibilities
-- Show the data flow
-- Explain key design decisions
+Provide an ASCII diagram showing what a strong solution looks like. Follow these diagramming principles:
+
+### Diagram Structure
+1. **Separate data flow from supporting services**
+   - Main pipeline (data flow) at the top
+   - Supporting/reference services in a separate section below
+   - Use section headers like `═══ MAIN DATA FLOW ═══` and `═══ SUPPORTING SERVICES ═══`
+
+2. **Distinguish relationship types**
+   - Solid arrows (`───▶`) for data flow (events moving through the system)
+   - Label arrows when the action isn't obvious (e.g., "writes delivery tasks", "when due")
+   - For query/lookup relationships, don't use arrows—instead, list "Queried by:" or "Reads from:" inside the box
+
+3. **Show branching explicitly**
+   - Success/failure/retry paths should branch visually, not be described in prose
+   - Use labels like `SUCCESS`, `FAILURE`, `EXHAUSTED` at branch points
+
+4. **Avoid misleading vertical stacking**
+   - Don't stack boxes vertically with arrows if they don't represent sequential data flow
+   - Components that query each other are not pipeline stages
+
+### Content Requirements
+- Name each sub-system and its responsibilities
+- Show the main data flow from ingestion to completion
+- Show failure/retry paths as branches
+- List supporting services separately with what they're queried by
+- Include a "detail" section for complex component behavior if needed
 
 ---
 

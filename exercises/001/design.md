@@ -207,108 +207,113 @@ The industry standard (which Stripe actually uses) is `Stripe-Signature: t=times
 ## What the Ideal System Looks Like
 
 ```
+═══════════════════════════════════════════════════════════════════════════════
+                              MAIN DATA FLOW (pipeline)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌──────────────┐      ┌─────────────────┐      ┌─────────────────┐
+│   Internal   │─────▶│      Kafka      │─────▶│  Router Service │
+│   Stripe     │      │  (by tenant_id) │      │   (stateless)   │
+│   Services   │      └─────────────────┘      └────────┬────────┘
+└──────────────┘       500k events/sec                  │
+                                                        │ writes delivery tasks
+                                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                           INGESTION LAYER                                    │
-│  ┌──────────────┐    ┌──────────────────────────────────────────────────┐   │
-│  │ Internal     │───▶│  Kafka (partitioned by tenant_id)                │   │
-│  │ Stripe       │    │  - Durable, ordered within partition             │   │
-│  │ Services     │    │  - Handles 500k/sec with horizontal scaling      │   │
-│  └──────────────┘    │  - Decouples producers from delivery speed       │   │
-│                      └──────────────────────────────────────────────────┘   │
+│  Delivery Queue (SQS/Kafka, partitioned by endpoint_id)                     │
+│  - Tenant isolation: slow endpoint only backs up its own partition          │
+│  - Visibility timeout = worker lease (auto-recovery on worker crash)        │
 └─────────────────────────────────────────────────────────────────────────────┘
-                                       │
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           ROUTING LAYER                                      │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  Router Service (stateless, horizontally scalable)                    │   │
-│  │  - Consumes from Kafka                                                │   │
-│  │  - Looks up endpoints for tenant (from cached Endpoint Service)       │   │
-│  │  - Filters by event type subscription                                 │   │
-│  │  - Fans out: 1 event → N delivery tasks (one per matching endpoint)   │   │
-│  │  - Writes delivery tasks to Delivery Queue                            │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                              │                                               │
-│                              ▼                                               │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  Endpoint Service                                                     │   │
-│  │  - Source of truth: Postgres (10M endpoints, easily fits)             │   │
-│  │  - Caches in Redis, pub/sub invalidation on config changes            │   │
-│  │  - Tracks endpoint health scores (success rate, avg latency)          │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                       │
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           DELIVERY LAYER                                     │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  Delivery Queue (SQS or Kafka)                                        │   │
-│  │  - Partitioned by endpoint_id (tenant isolation!)                     │   │
-│  │  - Slow endpoint only backs up its own partition                      │   │
-│  │  - Visibility timeout = worker lease                                  │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                              │                                               │
-│                              ▼                                               │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  Delivery Workers (stateless, autoscaling)                            │   │
-│  │  - Pull from queue, make HTTPS call                                   │   │
-│  │  - Sign payload: Stripe-Signature: t={ts},v1={hmac(ts.body, secret)}  │   │
-│  │  - Include Idempotency-Key header (event_id + endpoint_id + attempt)  │   │
-│  │  - Timeout: 5s connect, 30s read (configurable per endpoint tier)     │   │
-│  │  - On success: ack message, write to Delivery Log                     │   │
-│  │  - On failure: nack with backoff delay, increment attempt counter     │   │
-│  │  - Circuit breaker: if endpoint health score < threshold, fast-fail   │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                       │
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           RETRY LAYER                                        │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  Retry Scheduler                                                      │   │
-│  │  - Failed deliveries scheduled with exponential backoff               │   │
-│  │  - Stored in sorted set (Redis ZSET) by next_retry_time               │   │
-│  │  - Scheduler polls ZRANGEBYSCORE for due retries, enqueues them       │   │
-│  │  - After 72 hours or N attempts: move to DLQ                          │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                              │                                               │
-│                              ▼                                               │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  Dead Letter Queue + Handler                                          │   │
-│  │  - Permanently failed events stored for 30 days                       │   │
-│  │  - Customer notified via email / dashboard alert                      │   │
-│  │  - Manual replay API: POST /events/{id}/retry                         │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                       │
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           OBSERVABILITY LAYER                                │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  Delivery Log (append-only, time-series optimized)                    │   │
-│  │  - Every attempt: event_id, endpoint_id, timestamp, status, latency   │   │
-│  │  - Queryable by customer for their delivery history                   │   │
-│  │  - Retained 30 days                                                   │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  Metrics + Alerting                                                   │   │
-│  │  - delivery_latency_seconds (histogram, by endpoint tier)             │   │
-│  │  - delivery_status_total (counter, by status_code, endpoint_id)       │   │
-│  │  - queue_depth (gauge, by partition)                                  │   │
-│  │  - endpoint_health_score (gauge, by endpoint_id)                      │   │
-│  │  - Alerts: queue depth > threshold, success rate < 99%, p99 > 5s      │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  Customer Dashboard API                                               │   │
-│  │  - GET /webhooks/endpoints - list configured endpoints                │   │
-│  │  - GET /webhooks/events - list events with delivery status            │   │
-│  │  - GET /webhooks/events/{id}/attempts - delivery attempt history      │   │
-│  │  - POST /webhooks/events/{id}/retry - manual replay                   │   │
-│  │  - GET /webhooks/endpoints/{id}/health - success rate, latency        │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
+                          │                               │
+                    ┌─────┴─────┐                   ┌─────┴─────┐
+                    ▼           ▼                   ▼           ▼
+              ┌──────────┐ ┌──────────┐       ┌──────────┐ ┌──────────┐
+              │ Worker 1 │ │ Worker 2 │  ...  │ Worker N │ │ Worker M │
+              └────┬─────┘ └────┬─────┘       └────┬─────┘ └────┬─────┘
+                   │            │                  │            │
+                   └────────────┴────────┬─────────┴────────────┘
+                                         │
+              ┌──────────────────────────┬┴─────────────────────────┐
+              │                          │                          │
+              ▼                          ▼                          ▼
+        ┌──────────┐              ┌────────────┐             ┌─────────────┐
+        │ SUCCESS  │              │  FAILURE   │             │ EXHAUSTED   │
+        │ ack msg  │              │ schedule   │             │ (N retries) │
+        └────┬─────┘              │  retry     │             └──────┬──────┘
+             │                    └─────┬──────┘                    │
+             │                          │                           │
+             │                          ▼                           ▼
+             │                 ┌─────────────────┐         ┌─────────────────┐
+             │                 │ Retry Scheduler │         │  Dead Letter    │
+             │                 │ (Redis ZSET by  │         │  Queue          │
+             │                 │  next_retry_at) │         │  + Customer     │
+             │                 └────────┬────────┘         │    Notification │
+             │                          │                  └─────────────────┘
+             │                          │ when due
+             │                          ▼
+             │                 ┌─────────────────┐
+             │                 │ Re-enqueue to   │
+             │                 │ Delivery Queue  │─────────────────┐
+             │                 └─────────────────┘                 │
+             │                                                     │
+             ▼                                                     │
+      ┌─────────────────────────────────────────┐                  │
+      │           Delivery Log                  │◀─────────────────┘
+      │  (append-only, every attempt recorded)  │
+      └─────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+                         SUPPORTING SERVICES (not in pipeline)
+═══════════════════════════════════════════════════════════════════════════════
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  Endpoint Service                                                       │
+  │  - Source of truth: Postgres (10M endpoints)                            │
+  │  - Redis cache with pub/sub invalidation                                │
+  │  - Tracks endpoint health scores                                        │
+  │                                                                         │
+  │  Queried by:                                                            │
+  │    • Router Service ── "what endpoints for tenant X, event type Y?"     │
+  │    • Workers ── "what's the health score? should I circuit-break?"      │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  Metrics + Alerting                                                     │
+  │  - delivery_latency_seconds (histogram, by endpoint tier)               │
+  │  - delivery_status_total (counter, by status_code)                      │
+  │  - queue_depth (gauge, by partition)                                    │
+  │  - endpoint_health_score (gauge, by endpoint_id)                        │
+  │  - Alerts: queue depth > threshold, success rate < 99%, p99 > 5s        │
+  │                                                                         │
+  │  Fed by: Workers, Delivery Queue metrics, Endpoint Service              │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  Customer Dashboard API                                                 │
+  │  - GET /webhooks/endpoints ── list configured endpoints                 │
+  │  - GET /webhooks/events ── list events with delivery status             │
+  │  - GET /webhooks/events/{id}/attempts ── delivery attempt history       │
+  │  - POST /webhooks/events/{id}/retry ── manual replay                    │
+  │  - GET /webhooks/endpoints/{id}/health ── success rate, latency         │
+  │                                                                         │
+  │  Reads from: Endpoint Service, Delivery Log, DLQ                        │
+  │  Writes to: Delivery Queue (for manual retries)                         │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+                              DELIVERY WORKER DETAIL
+═══════════════════════════════════════════════════════════════════════════════
+
+  Worker behavior on each message:
+  1. Pull message from queue (visibility timeout starts)
+  2. Query Endpoint Service for health score
+  3. If health < threshold → fast-fail (circuit breaker), nack with delay
+  4. Make HTTPS call to endpoint:
+     - Header: Stripe-Signature: t={ts},v1={hmac(ts.body, secret)}
+     - Header: Idempotency-Key: {event_id}_{endpoint_id}_{attempt}
+     - Timeout: 5s connect, 30s read
+  5. On 2xx → ack message, write success to Delivery Log
+  6. On error → nack with backoff, increment attempt, write to Delivery Log
+  7. Update Endpoint Service with result (for health scoring)
 ```
 
 ---
