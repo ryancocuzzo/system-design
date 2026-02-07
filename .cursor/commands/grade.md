@@ -1,12 +1,16 @@
 # Grade Design
 
-1. Read `problem.md` and `design.md` in current exercise folder
-2. Evaluate against `rubric.md`
-3. Append to `design.md` using the format below
+1. Detect whether the current exercise is in `exercises/` or `micro/`
+2. Read `problem.md` and `design.md` in the current exercise folder
+3. If in `micro/`, also read `context.md`
+4. Evaluate against `rubric.md` (for exercises) or `micro-rubric.md` (for micro-designs)
+5. Append to `design.md` using the appropriate format below
 
 Key question: "What feedback would this get in a senior staff design review?"
 
-## Output Format
+---
+
+## Output Format for Full Exercises (`exercises/`)
 
 ```markdown
 ---
@@ -98,9 +102,85 @@ Identify the fundamental framing shift that would have changed their approach.
 - Why does this reframe lead to better architecture?
 ```
 
+---
+
+## Output Format for Micro-Designs (`micro/`)
+
+```markdown
+---
+
+## Review
+
+**Score: X/10**
+
+| Criterion | Score | Notes |
+|-----------|-------|-------|
+| Problem Framing | /10 | |
+| Architecture Quality | /10 | |
+| Tradeoff Reasoning | /10 | |
+| Failure Handling | /10 | |
+| Communication | /10 | |
+| Operational Concerns | /10 | |
+
+### Framing Assessment
+
+**Their framing:** [what they identified as the core challenge]
+**Correct framing:** [what the core challenge actually is]
+**Match:** [correct / partially correct / wrong]
+
+If wrong or partially correct, explain:
+- What the correct framing is and why
+- How the wrong framing affected their sub-system choices and deep dive
+- The specific moment where the wrong framing led them astray
+
+### Phase-by-Phase Feedback
+
+**Phase 1 (Framing):** Did they identify the right core challenge? Did their "decision that matters most" actually matter most?
+
+**Phase 2 (Sub-systems):** Were the sub-systems well-chosen? Did they miss a critical one? Did they include unnecessary ones?
+
+**Phase 3 (Deep Dive):** Did they pick the right sub-systems to go deep on? Was the depth appropriate for the time box?
+
+**Phase 4 (Integration):** Do the sub-systems actually compose into a working system?
+
+**Phase 5 (NFRs):** Were confidence levels honest? Were the "high confidence" items actually well-addressed?
+
+**Phase 6 (Failures):** Did they identify the failure modes that matter for this specific system?
+
+### Context Questions Assessment
+
+Review the `context.md`:
+- Were the right questions asked?
+- Were any critical knowledge gaps missed (questions they should have asked but didn't)?
+- Did any unanswered knowledge gaps lead to design errors?
+
+---
+
+## Ideal System Architecture
+
+Provide an ASCII diagram showing what a strong solution looks like. Follow the same diagramming principles as full exercises.
+
+---
+
+## Key Differences
+
+| Aspect | Their Design | Ideal Design | Why It Matters |
+|--------|--------------|--------------|----------------|
+| [aspect] | [what they did] | [what should be done] | [consequence] |
+
+---
+
+## Core Mental Model
+
+Same as full exercises: identify the fundamental framing shift.
+```
+
+---
+
 ## Grading Principles
 
 - Be specific: reference their actual words and decisions
 - Be thorough: every substantive point deserves examination
 - Be constructive: show what good looks like, not just what's wrong
 - Be honest: don't soften feedback to be nice
+- For micro-designs, weigh framing accuracy heavily — it's the primary skill being trained

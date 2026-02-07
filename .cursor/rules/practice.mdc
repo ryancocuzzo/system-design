@@ -5,13 +5,41 @@ globs: ["**/*.md"]
 
 # System Design Practice
 
-Exercises live in `exercises/NNN/` with two files:
+Two practice tracks exist in this repo:
+
+## Full Exercises
+
+Live in `exercises/NNN/` with two files:
 - `problem.md` — requirements and constraints
 - `design.md` — architecture, tradeoffs, failure modes, review feedback
 
 Evaluation uses `rubric.md` at repo root.
 
+## Micro-Designs
+
+Live in `micro/NNN/` with three files:
+- `problem.md` — requirements, constraints, and framing scaffolding
+- `context.md` — domain knowledge questions asked and answered during the design (separate from design reasoning)
+- `design.md` — phased design (45 min target) with review feedback
+
+Evaluation uses `micro-rubric.md` at repo root.
+
+### Micro-Design Principles
+
+- Problems are the same complexity as full exercises. The format is structured, not simplified.
+- The phased template enforces: frame first, decompose second, design third.
+- If stuck on any phase beyond its time box, write what you know, mark it incomplete, and move on. A partial answer in every phase beats a thorough answer in two phases.
+- `context.md` is for genuine knowledge gaps ("what is X?", "how does Y work?"). It is not part of the design. Time spent there does not count against the 45-minute design clock.
+- The framing prompt in Phase 1 is the anchor. When overwhelmed mid-design, return to it: "Is what I'm working on related to the core challenge I identified?" If not, stop.
+
 ## Commands
+
+### /micro
+1. Find next number in `micro/`
+2. Create `micro/NNN/problem.md` with requirements and framing scaffolding
+3. Create `micro/NNN/context.md` with context question template
+4. Create `micro/NNN/design.md` with phased design template
+5. Display problem inline
 
 ### /new
 1. Find next number in `exercises/`
@@ -20,18 +48,22 @@ Evaluation uses `rubric.md` at repo root.
 4. Display problem inline
 
 ### /grade
-1. Read `problem.md` and `design.md`
-2. Score against `rubric.md`
-3. Append review to `design.md` under `## Review` section
-4. Include revision suggestions
+1. Detect whether current exercise is in `exercises/` or `micro/`
+2. Read `problem.md` and `design.md` (and `context.md` for micro-designs)
+3. Score against `rubric.md` or `micro-rubric.md` accordingly
+4. Append review to `design.md`
+5. Include revision suggestions (full exercises) or phase-by-phase feedback (micro-designs)
 
 ### /review
-1. Scan `design.md` files for `## Review` sections
-2. Report patterns across exercises
+1. Scan `design.md` files in both `exercises/` and `micro/` for `## Review` sections
+2. Report patterns across all exercises, with separate tracking per track
+3. Track framing accuracy as a primary metric for micro-designs
 
-## Problem Generation
+## Problem Generation (both tracks)
 
 Include: context, functional requirements, non-functional requirements (with numbers), constraints.
 Do not include: solutions, architecture hints, tradeoffs.
+
+For micro-designs, also include: framing prompt with plausible alternatives (correct framing must be among them), sub-system identification prompt.
 
 Categories: data systems, real-time systems, transactional systems, platform services, content systems.
