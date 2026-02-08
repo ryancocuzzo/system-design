@@ -17,20 +17,21 @@ exercises/
 
 ### Micro-Designs
 
-Same problem complexity, but with structured phases and a 45-minute time box. Focused on building problem framing skill and systematic decomposition.
+Same problem complexity, but with a 50-minute time box, guided research, and structured phases. Focused on building problem framing skill, concept vocabulary, and systematic decomposition.
 
 ```
 micro/
 └── 001/
-    ├── problem.md   # constraints, requirements, and framing scaffolding
-    ├── context.md   # domain knowledge questions, separate from design
+    ├── problem.md   # constraints, requirements, concept hints, framing scaffolding
+    ├── context.md   # guided research prompts and questions during design
     └── design.md    # phased architecture with review notes
 ```
 
-## Evaluation
+## Reference
 
-- `rubric.md` — criteria for full exercises
-- `micro-rubric.md` — criteria for micro-designs (weighted toward problem framing)
+- `concepts.md` — system design concept reference, organized by category
+- `rubric.md` — evaluation criteria for full exercises
+- `micro-rubric.md` — evaluation criteria for micro-designs
 
 ## Commands
 

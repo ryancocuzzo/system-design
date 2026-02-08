@@ -2,7 +2,7 @@
 
 1. Find next number in `micro/`
 2. Create `micro/NNN/problem.md` using the format below
-3. Create `micro/NNN/context.md` with the context template
+3. Create `micro/NNN/context.md` with the context template (including guided research prompts)
 4. Create `micro/NNN/design.md` with the phased design template
 5. Display problem inline
 
@@ -30,12 +30,6 @@ Answer these before writing any architecture:
 
 3. What is the one design decision that, if wrong, makes everything else irrelevant?
 
-## Sub-system Identification (5 minutes, no details yet)
-
-List 3-6 sub-systems this problem decomposes into.
-For each, write ONE sentence about its responsibility.
-Do not design any of them yet.
-
 ## Functional Requirements
 [Same depth as full exercises]
 
@@ -44,21 +38,33 @@ Do not design any of them yet.
 
 ## Constraints
 [Same as full exercises]
+
+## Concepts to Explore
+
+These areas are relevant to this problem. Research unfamiliar ones in `context.md` before starting your design.
+
+- [Concept area 1 — one-line description of why it's relevant]
+- [Concept area 2 — one-line description of why it's relevant]
+- [Concept area 3 — one-line description of why it's relevant]
 ```
 
 ## Context Template
 
 ```markdown
-# Context Questions — [Problem Title]
+# Context — [Problem Title]
 
-Questions asked and answered before or during the design.
-Separate from the design document to keep architectural reasoning clean.
+## Guided Research (10 min)
 
-## Before Design
-[Ask and answer domain knowledge questions here before starting the design.]
+Research these before starting your design. For each, write 1-2 sentences on what it is and when you'd use it. If time runs out, move on — don't let research eat your design time.
+
+1. **[Concept]** — [Research prompt phrased as a question]
+
+2. **[Concept]** — [Research prompt phrased as a question]
+
+3. **[Concept]** — [Research prompt phrased as a question]
 
 ## During Design
-[Ask and answer questions that arise while designing. Note which phase triggered the question.]
+[Questions that arise while designing. Note which phase triggered them.]
 ```
 
 ## Design Template
@@ -66,10 +72,10 @@ Separate from the design document to keep architectural reasoning clean.
 ```markdown
 # Design: [Problem Title]
 
-Target time: 45 minutes total.
+Total time budget: 50 minutes (research + design + buffer).
 If stuck on any phase beyond its time box, write what you know, mark it incomplete, and move on.
 
-## Phase 1: Problem Framing (5 min)
+## Phase 1: Framing (5 min)
 
 **One-line summary:**
 
@@ -79,39 +85,35 @@ If stuck on any phase beyond its time box, write what you know, mark it incomple
 
 **The decision that matters most:**
 
-## Phase 2: Sub-systems (5 min)
+## Phase 2: Sub-systems and Connections (5 min)
 
-| Sub-system | Responsibility | Why it's separate |
-|------------|---------------|-------------------|
-| | | |
+List sub-systems, their responsibilities, and how they connect. Bulleted list, not a table.
 
-## Phase 3: Core Sub-system Deep Dive (20 min)
+## Phase 3: Deep Dive (20 min)
 
-Pick the 2-3 sub-systems where the real complexity lives. Design those. Skip the straightforward ones.
+Pick the 2 sub-systems where the real complexity lives. Design those. Skip the straightforward ones.
 
-### [Hardest sub-system]
+### [Sub-system name]
 
-### [Second hardest sub-system]
+**Approaches:** [A] vs [B]
+**Choice:** [X] — [one sentence why]
 
-## Phase 4: Integration (5 min)
+**Design:**
 
-How do the sub-systems connect?
+### [Sub-system name]
 
-| From | To | What flows | Sync/Async | Why |
-|------|----|-----------|------------|-----|
-| | | | | |
+**Approaches:** [A] vs [B]
+**Choice:** [X] — [one sentence why]
 
-## Phase 5: Addressing Non-Functional Requirements (5 min)
+**Design:**
 
-| Requirement | How addressed | Confidence |
-|-------------|---------------|------------|
-| | | high / medium / low |
+## Phase 4: Stress Test (5 min)
 
-## Phase 6: Failure Modes (5 min)
+Pick the 3-5 most critical NFRs and failure modes. You cannot cover all of them — prioritize.
 
-| Failure | Impact | Mitigation |
-|---------|--------|------------|
-| | | |
+| Concern | Type | How addressed | Confidence |
+|---------|------|---------------|------------|
+| | NFR / Failure | | high / medium / low |
 
 ---
 
@@ -122,8 +124,15 @@ Time elapsed: ___
 
 - Genuine tradeoffs (no single obvious answer)
 - Scale quantified with numbers
-- Designable in 45 minutes with the phased structure
+- Designable in 50 minutes with the phased structure (including 10 min research)
 - Should test problem framing — the core challenge should not be the obvious surface-level reading
+
+## Concept Hint Requirements
+
+- Include exactly 3 concept areas in "Concepts to Explore" drawn from `concepts.md`
+- Pick the 3 most design-critical areas — the ones that, if unknown, would most damage the design
+- Name the concept category and its relevance, but do not say which specific tool to use or how
+- Generate 3 matching research prompts in `context.md`, each phrased as a question
 
 ## Categories (rotate)
 

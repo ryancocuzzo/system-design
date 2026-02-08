@@ -18,27 +18,45 @@ Evaluation uses `rubric.md` at repo root.
 ## Micro-Designs
 
 Live in `micro/NNN/` with three files:
-- `problem.md` — requirements, constraints, and framing scaffolding
-- `context.md` — domain knowledge questions asked and answered during the design (separate from design reasoning)
-- `design.md` — phased design (45 min target) with review feedback
+- `problem.md` — requirements, constraints, concept hints, and framing scaffolding
+- `context.md` — guided research prompts and questions asked during design
+- `design.md` — phased design (50 min total including research) with review feedback
 
 Evaluation uses `micro-rubric.md` at repo root.
+
+### Micro-Design Time Budget (50 min total)
+
+| Phase | Time |
+|-------|------|
+| Research | 10 min |
+| Framing | 5 min |
+| Sub-systems + connections | 5 min |
+| Deep dive | 20 min |
+| Stress test | 5 min |
+| Buffer | 5 min |
 
 ### Micro-Design Principles
 
 - Problems are the same complexity as full exercises. The format is structured, not simplified.
-- The phased template enforces: frame first, decompose second, design third.
+- The 50 minutes includes everything: research, design, and buffer. There is no separate clock.
+- Research phase: answer the 3 guided research prompts in `context.md` via self-research. This builds the vocabulary needed for informed decisions in the deep dive.
 - If stuck on any phase beyond its time box, write what you know, mark it incomplete, and move on. A partial answer in every phase beats a thorough answer in two phases.
-- `context.md` is for genuine knowledge gaps ("what is X?", "how does Y work?"). It is not part of the design. Time spent there does not count against the 45-minute design clock.
 - The framing prompt in Phase 1 is the anchor. When overwhelmed mid-design, return to it: "Is what I'm working on related to the core challenge I identified?" If not, stop.
+- In the deep dive, name 2+ approaches before picking one. This prevents defaulting to the first familiar tool.
+- The stress test phase is triaged: pick the 3-5 most critical NFRs and failure modes. You cannot cover all of them.
+- Research must translate to design. Concepts studied in `context.md` but absent from the architecture is a specific anti-pattern the grading will call out.
+
+## Reference
+
+`concepts.md` at repo root is a concept reference organized by category (storage, caching, messaging, reliability, etc.). Consult it during any exercise. The `/micro` command draws concept hints from it.
 
 ## Commands
 
 ### /micro
 1. Find next number in `micro/`
-2. Create `micro/NNN/problem.md` with requirements and framing scaffolding
-3. Create `micro/NNN/context.md` with context question template
-4. Create `micro/NNN/design.md` with phased design template
+2. Create `micro/NNN/problem.md` with requirements, framing scaffolding, and 3 concept hints
+3. Create `micro/NNN/context.md` with 3 guided research prompts matching the concept hints
+4. Create `micro/NNN/design.md` with 4-phase design template
 5. Display problem inline
 
 ### /new
@@ -52,18 +70,18 @@ Evaluation uses `micro-rubric.md` at repo root.
 2. Read `problem.md` and `design.md` (and `context.md` for micro-designs)
 3. Score against `rubric.md` or `micro-rubric.md` accordingly
 4. Append review to `design.md`
-5. Include revision suggestions (full exercises) or phase-by-phase feedback (micro-designs)
+5. Include revision suggestions (full exercises) or phase-by-phase feedback + research assessment (micro-designs)
 
 ### /review
 1. Scan `design.md` files in both `exercises/` and `micro/` for `## Review` sections
 2. Report patterns across all exercises, with separate tracking per track
-3. Track framing accuracy as a primary metric for micro-designs
+3. Track framing accuracy and research-to-design translation as primary metrics for micro-designs
 
 ## Problem Generation (both tracks)
 
 Include: context, functional requirements, non-functional requirements (with numbers), constraints.
 Do not include: solutions, architecture hints, tradeoffs.
 
-For micro-designs, also include: framing prompt with plausible alternatives (correct framing must be among them), sub-system identification prompt.
+For micro-designs, also include: framing prompt with plausible alternatives, 3 concept hints drawn from `concepts.md`, and 3 matching research prompts in `context.md`.
 
 Categories: data systems, real-time systems, transactional systems, platform services, content systems.

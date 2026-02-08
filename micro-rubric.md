@@ -1,15 +1,15 @@
 # Micro-Design Evaluation Rubric
 
-Micro-designs are time-boxed (45 min), scaffolded exercises focused on problem framing and architectural thinking. Grading reflects these priorities.
+Micro-designs are time-boxed (50 min total including research), scaffolded exercises focused on problem framing, concept application, and architectural thinking. Grading reflects these priorities.
 
 ## Scoring Scale
 
 | Score | Meaning |
 |-------|---------|
-| 9–10 | Strong framing, clear structure, right sub-systems identified and explored. |
-| 7–8 | Correct framing with 1-2 structural gaps. |
-| 5–6 | Partial framing. Some right instincts, but core challenge not fully identified. |
-| 3–4 | Wrong framing or major structural problems. |
+| 9–10 | Strong framing, right concepts applied, clear structure, right sub-systems identified and explored. |
+| 7–8 | Correct framing with 1-2 structural gaps. Research mostly translated to design. |
+| 5–6 | Partial framing. Some right instincts, but core challenge not fully identified or research not applied. |
+| 3–4 | Wrong framing or major structural problems. Research disconnected from design. |
 | 0–2 | Did not complete or fundamentally off-target. |
 
 ## Criteria
@@ -17,9 +17,9 @@ Micro-designs are time-boxed (45 min), scaffolded exercises focused on problem f
 | Criterion | Weight | Indicators |
 |-----------|--------|------------|
 | Problem Framing | 25% | Core challenge correctly identified, right mental model chosen, most important decision named |
-| Architecture Quality | 20% | Sub-systems justified, responsibilities clear, core sub-systems explored with appropriate depth |
-| Tradeoff Reasoning | 20% | Alternatives considered for key decisions, costs acknowledged, reasoning explicit |
-| Failure Handling | 15% | Major failure modes identified, mitigations concrete even if brief |
+| Architecture Quality | 20% | Sub-systems justified, responsibilities clear, core sub-systems explored with appropriate depth, guided research informed technology and pattern choices |
+| Tradeoff Reasoning | 20% | Alternatives named and compared for key decisions, chosen approach justified, costs acknowledged |
+| Stress Testing | 15% | Critical NFRs and failure modes identified and triaged, mitigations concrete even if brief |
 | Communication | 15% | Phases structured clearly, reasoning traceable, incomplete sections explicitly marked |
 | Operational Concerns | 5% | Basic awareness of observability, deployment, debugging |
 
@@ -37,29 +37,29 @@ Micro-designs are time-boxed (45 min), scaffolded exercises focused on problem f
 ### Architecture Quality (20%)
 | Score | Indicators |
 |-------|------------|
-| 9-10 | Sub-systems well-chosen, core 2-3 explored with real depth, clear separation of concerns |
-| 7-8 | Good sub-system choices, reasonable depth on core components |
-| 5-6 | Sub-systems present but responsibilities unclear, or depth spent on wrong components |
-| 3-4 | Monolithic or incoherent decomposition |
+| 9-10 | Sub-systems well-chosen, core 2 explored with real depth, guided research clearly informed technology choices (e.g., chose a purpose-built store over a general-purpose DB because research revealed why) |
+| 7-8 | Good sub-system choices, reasonable depth, research partially applied |
+| 5-6 | Sub-systems present but responsibilities unclear, or research done but not connected to design decisions |
+| 3-4 | Monolithic or incoherent decomposition, research ignored |
 | 0-2 | No meaningful architecture |
 
 ### Tradeoff Reasoning (20%)
 | Score | Indicators |
 |-------|------------|
-| 9-10 | Key decisions have alternatives rejected with reasoning, costs explicit |
-| 7-8 | Major tradeoffs discussed for core sub-systems |
-| 5-6 | Limited alternatives, shallow reasoning |
-| 3-4 | Decisions stated without justification |
+| 9-10 | Each core sub-system has 2+ approaches named, chosen approach justified with one clear sentence, costs acknowledged |
+| 7-8 | Alternatives named for most decisions, reasoning present |
+| 5-6 | Limited alternatives, shallow reasoning, or alternatives listed but no clear rationale for choice |
+| 3-4 | Decisions stated without justification, no alternatives considered |
 | 0-2 | No tradeoff reasoning |
 
-### Failure Handling (15%)
+### Stress Testing (15%)
 | Score | Indicators |
 |-------|------------|
-| 9-10 | Major failure modes identified with concrete mitigations |
-| 7-8 | Key failures named with reasonable mitigations |
-| 5-6 | Basic awareness, generic mitigations |
-| 3-4 | Minimal consideration |
-| 0-2 | No failure handling |
+| 9-10 | 3-5 most critical NFRs and failure modes identified and triaged, mitigations concrete |
+| 7-8 | Key concerns named with reasonable mitigations, good prioritization |
+| 5-6 | Basic awareness, generic mitigations, or poor prioritization (addressed easy concerns, skipped hard ones) |
+| 3-4 | Minimal consideration or only generic failures (e.g., "DB goes down") |
+| 0-2 | No stress testing |
 
 ### Communication (15%)
 | Score | Indicators |

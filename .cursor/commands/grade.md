@@ -118,7 +118,7 @@ Identify the fundamental framing shift that would have changed their approach.
 | Problem Framing | /10 | |
 | Architecture Quality | /10 | |
 | Tradeoff Reasoning | /10 | |
-| Failure Handling | /10 | |
+| Stress Testing | /10 | |
 | Communication | /10 | |
 | Operational Concerns | /10 | |
 
@@ -137,22 +137,20 @@ If wrong or partially correct, explain:
 
 **Phase 1 (Framing):** Did they identify the right core challenge? Did their "decision that matters most" actually matter most?
 
-**Phase 2 (Sub-systems):** Were the sub-systems well-chosen? Did they miss a critical one? Did they include unnecessary ones?
+**Phase 2 (Sub-systems + Connections):** Were the sub-systems well-chosen? Did they miss a critical one? Did they include unnecessary ones? Are the connections between them coherent?
 
-**Phase 3 (Deep Dive):** Did they pick the right sub-systems to go deep on? Was the depth appropriate for the time box?
+**Phase 3 (Deep Dive):** Did they pick the right sub-systems to go deep on? Did they name meaningful alternatives before choosing? Did the chosen approaches fit the requirements?
 
-**Phase 4 (Integration):** Do the sub-systems actually compose into a working system?
+**Phase 4 (Stress Test):** Did they triage well — picking the most critical NFRs and failure modes rather than the obvious ones? Were mitigations concrete?
 
-**Phase 5 (NFRs):** Were confidence levels honest? Were the "high confidence" items actually well-addressed?
-
-**Phase 6 (Failures):** Did they identify the failure modes that matter for this specific system?
-
-### Context Questions Assessment
+### Research Assessment
 
 Review the `context.md`:
-- Were the right questions asked?
-- Were any critical knowledge gaps missed (questions they should have asked but didn't)?
-- Did any unanswered knowledge gaps lead to design errors?
+- Were the guided research prompts answered with genuine understanding (not just surface definitions)?
+- Did the research translate into design decisions? (e.g., if they researched TSDBs, did they use one where appropriate?)
+- Were any research prompts skipped that would have changed the design?
+- Did any additional questions arise during design that they should have asked?
+- Was research done but then ignored in the architecture? (This is a specific anti-pattern to call out.)
 
 ---
 
@@ -184,3 +182,4 @@ Same as full exercises: identify the fundamental framing shift.
 - Be constructive: show what good looks like, not just what's wrong
 - Be honest: don't soften feedback to be nice
 - For micro-designs, weigh framing accuracy heavily — it's the primary skill being trained
+- For micro-designs, explicitly assess whether guided research translated into design decisions — this is the core learning loop
