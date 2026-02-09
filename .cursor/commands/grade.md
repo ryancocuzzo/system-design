@@ -116,11 +116,10 @@ Identify the fundamental framing shift that would have changed their approach.
 | Criterion | Score | Notes |
 |-----------|-------|-------|
 | Problem Framing | /10 | |
-| Architecture Quality | /10 | |
+| Key Decisions | /10 | |
 | Tradeoff Reasoning | /10 | |
 | Stress Testing | /10 | |
 | Communication | /10 | |
-| Operational Concerns | /10 | |
 
 ### Framing Assessment
 
@@ -130,33 +129,45 @@ Identify the fundamental framing shift that would have changed their approach.
 
 If wrong or partially correct, explain:
 - What the correct framing is and why
-- How the wrong framing affected their sub-system choices and deep dive
+- How the wrong framing affected their decisions
 - The specific moment where the wrong framing led them astray
 
 ### Phase-by-Phase Feedback
 
 **Phase 1 (Framing):** Did they identify the right core challenge? Did their "decision that matters most" actually matter most?
 
-**Phase 2 (Sub-systems + Connections):** Were the sub-systems well-chosen? Did they miss a critical one? Did they include unnecessary ones? Are the connections between them coherent?
+**Phase 2 (Sub-systems):** Were the sub-systems well-chosen? Did they miss a critical one? Did they include unnecessary ones? Did they stay disciplined (5 lines or fewer)?
 
-**Phase 3 (Deep Dive):** Did they pick the right sub-systems to go deep on? Did they name meaningful alternatives before choosing? Did the chosen approaches fit the requirements?
+**Phase 3 (Key Decisions):** For each decision:
+- Was the chosen option correct given the constraints and NFRs?
+- Does the justification reference specific requirements, or is it generic ("simplest", "safest")?
+- Are the mechanics described concretely enough to evaluate feasibility?
+- Did the framing from Phase 1 help or hurt the decision?
 
-**Phase 4 (Stress Test):** Did they triage well — picking the most critical NFRs and failure modes rather than the obvious ones? Were mitigations concrete?
+**Phase 4 (Stress Test):** Did they triage well — picking the most critical NFRs and failure modes rather than the obvious ones? Were mitigations concrete and specific to this system?
 
 ### Research Assessment
 
 Review the `context.md`:
 - Were the guided research prompts answered with genuine understanding (not just surface definitions)?
-- Did the research translate into design decisions? (e.g., if they researched TSDBs, did they use one where appropriate?)
-- Were any research prompts skipped that would have changed the design?
-- Did any additional questions arise during design that they should have asked?
-- Was research done but then ignored in the architecture? (This is a specific anti-pattern to call out.)
+- Did the research translate into decisions in Phase 3?
+- Was research done but then ignored when making decisions? (Specific anti-pattern to call out.)
 
 ---
 
 ## Ideal System Architecture
 
 Provide an ASCII diagram showing what a strong solution looks like. Follow the same diagramming principles as full exercises.
+
+---
+
+## Decision Analysis
+
+For each decision scaffold in Phase 3, explain:
+- Which option was correct for this problem and why
+- What constraints or NFRs make the other options wrong or worse
+- What the mechanics of the correct approach look like in practice
+- How this decision connects to the other decisions (cascading effects)
 
 ---
 
@@ -170,7 +181,10 @@ Provide an ASCII diagram showing what a strong solution looks like. Follow the s
 
 ## Core Mental Model
 
-Same as full exercises: identify the fundamental framing shift.
+Identify the fundamental framing shift that would have changed their approach.
+- How did they conceptualize the problem?
+- How should they have conceptualized it?
+- Why does this reframe lead to better decisions?
 ```
 
 ---
@@ -178,8 +192,8 @@ Same as full exercises: identify the fundamental framing shift.
 ## Grading Principles
 
 - Be specific: reference their actual words and decisions
-- Be thorough: every substantive point deserves examination
+- Be thorough: every decision deserves examination
 - Be constructive: show what good looks like, not just what's wrong
 - Be honest: don't soften feedback to be nice
-- For micro-designs, weigh framing accuracy heavily — it's the primary skill being trained
-- For micro-designs, explicitly assess whether guided research translated into design decisions — this is the core learning loop
+- For micro-designs, the Decision Analysis section is the most important part of the review — it's where the user learns what the right answer was and why
+- For micro-designs, explicitly assess whether guided research translated into Phase 3 decisions

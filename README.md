@@ -17,14 +17,14 @@ exercises/
 
 ### Micro-Designs
 
-Same problem complexity, but with a 50-minute time box, guided research, and structured phases. Focused on building problem framing skill, concept vocabulary, and systematic decomposition.
+Scope-reduced problems with guided decision-making. 40-minute time box. Phase 3 provides architectural decisions with named options — you pick, justify, and describe the mechanics.
 
 ```
 micro/
 └── 001/
-    ├── problem.md   # constraints, requirements, concept hints, framing scaffolding
+    ├── problem.md   # focused requirements, concept hints
     ├── context.md   # guided research prompts and questions during design
-    └── design.md    # phased architecture with review notes
+    └── design.md    # phased design with decision scaffolds and review notes
 ```
 
 ## Reference

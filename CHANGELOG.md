@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-02-09 — Add decision scaffolding and reduce problem scope
+
+After two micro-designs (micro/001: 3.5/10, micro/002: 4/10), the same breakdown point appeared both times: Phase 3. The user could frame a problem (roughly) and list sub-systems, but when asked to design a sub-system from scratch — blank page paralysis. The gap between knowing a concept exists and being able to design with it is too large to bridge with research alone. Additionally, problems had 7 functional requirements, 7 NFRs, and 5 constraints — too much surface area to process in 40-50 minutes.
+
+**What changed:**
+
+- **Problem scope reduced**: 3-4 functional requirements, 3-4 NFRs, 2-3 constraints. Only what drives the core architectural decisions. Peripheral requirements cut.
+- **Phase 3 replaced with decision scaffolds**: Instead of "design this sub-system," the design template provides 2-3 specific architectural decisions with named options. The user picks an option, justifies it by referencing constraints/NFRs, and describes the mechanics. This removes blank-page paralysis while still requiring reasoning.
+- **Research reduced to 2 prompts, 5 minutes**: Down from 3 prompts and 10 minutes. Matched to the 2 concepts most critical for Phase 3 decisions.
+- **"Before You Design" merged into Phase 1**: The framing questions in problem.md and Phase 1 were redundant. Now the design starts directly at Phase 1.
+- **Time budget reduced to 40 minutes**: 10 min shorter. Less time = less opportunity to go off-track. The decision scaffolding makes Phase 3 more productive per minute.
+- **Rubric updated**: "Key Decisions" is now a 30%-weighted criterion replacing "Architecture Quality." Grading focuses on whether the right option was chosen given the constraints and whether the justification references specific requirements.
+- **Grade output includes Decision Analysis**: For each decision, the review explains which option was correct, why the others don't fit, and how the correct approach works in practice.
+
+**Why:**
+
+The user can identify alternatives but breaks when asked to design from scratch. Decision scaffolds bridge that gap: they teach what decisions matter, what options exist, and force reasoning about fit. The reduced scope ensures the problem is absorbable in a single reading. The progression path is: guided micro (decisions provided) → standard micro (open-ended) → full exercises (no scaffolding).
+
+---
+
 ## 2026-02-08 — Add guided research and tighten micro-design time budget
 
 After the first micro-design (micro/001, score: 3.5/10), the phased structure worked — the process was followed — but the design still missed because critical building blocks weren't in vocabulary. You can't pick a time-series database over Postgres if you've never worked closely with one. The current scaffolding addressed the process gap but not the knowledge gap.

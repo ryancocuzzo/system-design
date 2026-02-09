@@ -18,45 +18,54 @@ Evaluation uses `rubric.md` at repo root.
 ## Micro-Designs
 
 Live in `micro/NNN/` with three files:
-- `problem.md` — requirements, constraints, concept hints, and framing scaffolding
-- `context.md` — guided research prompts and questions asked during design
-- `design.md` — phased design (50 min total including research) with review feedback
+- `problem.md` — focused requirements (3-4 FRs, 3-4 NFRs, 2-3 constraints), concept hints
+- `context.md` — 2 guided research prompts and questions asked during design
+- `design.md` — phased design (40 min total) with decision scaffolds and review feedback
 
 Evaluation uses `micro-rubric.md` at repo root.
 
-### Micro-Design Time Budget (50 min total)
+### Micro-Design Time Budget (40 min total)
 
 | Phase | Time |
 |-------|------|
-| Research | 10 min |
+| Research | 5 min |
 | Framing | 5 min |
-| Sub-systems + connections | 5 min |
-| Deep dive | 20 min |
+| Sub-systems | 5 min |
+| Key decisions | 15 min |
 | Stress test | 5 min |
 | Buffer | 5 min |
 
 ### Micro-Design Principles
 
-- Problems are the same complexity as full exercises. The format is structured, not simplified.
-- The 50 minutes includes everything: research, design, and buffer. There is no separate clock.
-- Research phase: answer the 3 guided research prompts in `context.md` via self-research. This builds the vocabulary needed for informed decisions in the deep dive.
-- If stuck on any phase beyond its time box, write what you know, mark it incomplete, and move on. A partial answer in every phase beats a thorough answer in two phases.
-- The framing prompt in Phase 1 is the anchor. When overwhelmed mid-design, return to it: "Is what I'm working on related to the core challenge I identified?" If not, stop.
-- In the deep dive, name 2+ approaches before picking one. This prevents defaulting to the first familiar tool.
-- The stress test phase is triaged: pick the 3-5 most critical NFRs and failure modes. You cannot cover all of them.
-- Research must translate to design. Concepts studied in `context.md` but absent from the architecture is a specific anti-pattern the grading will call out.
+- Problems are scope-reduced but architecturally complex. Fewer requirements, same depth of tradeoffs.
+- The 40 minutes includes everything: research, design, and buffer. No separate clock.
+- Research phase: answer 2 guided research prompts in `context.md` via self-research. This builds vocabulary for Phase 3 decisions.
+- Phase 2 (sub-systems) is strictly listing: name 3-5 sub-systems, one sentence each. If you're writing more than 5 lines, you're over-designing.
+- Phase 3 provides 2-3 architectural decisions with named options. Your job: pick, justify by referencing constraints/NFRs, and describe the mechanics.
+- Justifications must reference specific constraints or NFRs. "Simplest" or "safest" without explaining why simplicity matters here is not a justification.
+- If stuck on any phase beyond its time box, write what you know, mark it incomplete, and move on.
+- Research must translate to decisions. Concepts studied in `context.md` but absent from Phase 3 choices is a specific anti-pattern the grading will call out.
+
+### Progression Path
+
+1. **Guided micro** (current) — reduced scope, decision scaffolds with options, 40 min
+2. **Standard micro** — full scope, open-ended deep dive, concept hints, 50 min
+3. **Full exercises** — no scaffolding, no time box
+4. **Timed full exercises** — no scaffolding, 35-40 min (interview-realistic)
+
+Transition signal from guided to standard: consistently picking the right options AND explaining the mechanics correctly.
 
 ## Reference
 
-`concepts.md` at repo root is a concept reference organized by category (storage, caching, messaging, reliability, etc.). Consult it during any exercise. The `/micro` command draws concept hints from it.
+`concepts.md` at repo root is a concept reference organized by category. Consult it during any exercise. The `/micro` command draws concept hints from it.
 
 ## Commands
 
 ### /micro
 1. Find next number in `micro/`
-2. Create `micro/NNN/problem.md` with requirements, framing scaffolding, and 3 concept hints
-3. Create `micro/NNN/context.md` with 3 guided research prompts matching the concept hints
-4. Create `micro/NNN/design.md` with 4-phase design template
+2. Create `micro/NNN/problem.md` with focused requirements and 2 concept hints
+3. Create `micro/NNN/context.md` with 2 guided research prompts
+4. Create `micro/NNN/design.md` with 4-phase template including 2-3 decision scaffolds
 5. Display problem inline
 
 ### /new
@@ -70,18 +79,21 @@ Evaluation uses `micro-rubric.md` at repo root.
 2. Read `problem.md` and `design.md` (and `context.md` for micro-designs)
 3. Score against `rubric.md` or `micro-rubric.md` accordingly
 4. Append review to `design.md`
-5. Include revision suggestions (full exercises) or phase-by-phase feedback + research assessment (micro-designs)
+5. For micro-designs: include phase-by-phase feedback, decision analysis, and research assessment
 
 ### /review
 1. Scan `design.md` files in both `exercises/` and `micro/` for `## Review` sections
 2. Report patterns across all exercises, with separate tracking per track
-3. Track framing accuracy and research-to-design translation as primary metrics for micro-designs
+3. Track decision accuracy and framing accuracy as primary metrics for micro-designs
 
-## Problem Generation (both tracks)
+## Problem Generation
 
+### Full exercises
 Include: context, functional requirements, non-functional requirements (with numbers), constraints.
 Do not include: solutions, architecture hints, tradeoffs.
 
-For micro-designs, also include: framing prompt with plausible alternatives, 3 concept hints drawn from `concepts.md`, and 3 matching research prompts in `context.md`.
+### Micro-designs
+Include: context, 3-4 functional requirements, 3-4 NFRs, 2-3 constraints, 2 concept hints, 2-3 decision scaffolds in the design template.
+Do not include: solutions or tradeoffs in the problem. Decision scaffolds provide options but not rationale.
 
 Categories: data systems, real-time systems, transactional systems, platform services, content systems.
