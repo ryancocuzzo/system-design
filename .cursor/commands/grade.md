@@ -5,6 +5,7 @@
 3. If in `micro/`, also read `context.md`
 4. Evaluate against `rubric.md` (for exercises) or `micro-rubric.md` (for micro-designs)
 5. Append to `design.md` using the appropriate format below
+6. **If grading a micro-design:** After appending the review, read all `micro/*/design.md` files, extract the score from each `## Review` section (pattern: `**Score: X/10**`), and update the `## Progress` section in `README.md` with a Mermaid chart. Replace the x-axis array with micro numbers that have been graded (e.g. `[001, 002, 003]`), and the line array with their scores in the same order. Use `xychart-beta` with `title "Micro Scores"`, `x-axis`, `y-axis "Score" 0 --> 10`, and `line [scores]`.
 
 Key question: "What feedback would this get in a senior staff design review?"
 

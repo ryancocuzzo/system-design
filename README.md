@@ -39,6 +39,18 @@ exercises/          micro/
 - [rubric.md](rubric.md) — Evaluation criteria for full exercises
 - [micro-rubric.md](micro-rubric.md) — Evaluation criteria for micro-designs
 
+## Progress
+
+Micro-design scores (updated when you run `/grade` on a micro):
+
+```mermaid
+xychart-beta
+    title "Micro Scores"
+    x-axis [001, 002, 003, 004, 005]
+    y-axis "Score" 0 --> 10
+    line [3.5, 4, 4.5, 4, 5]
+```
+
 ## Workflow (Cursor Commands)
 
 - `/new` — Generate a full exercise
