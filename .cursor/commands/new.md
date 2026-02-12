@@ -7,7 +7,8 @@
    - Non-functional requirements (quantified: QPS, latency, storage, availability)
    - Constraints
 3. Create empty `exercises/NNN/design.md`
-4. Display problem inline
+4. Add a row to the Problem Index table in `README.md`: `| Full | NNN | [Problem Title] |`. Insert in numerical order among Full rows.
+5. Display problem inline
 
 ## Problem Requirements
 

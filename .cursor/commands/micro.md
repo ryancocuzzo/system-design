@@ -4,7 +4,8 @@
 2. Create `micro/NNN/problem.md` using the format below
 3. Create `micro/NNN/context.md` with the context template (including 2 guided research prompts)
 4. Create `micro/NNN/design.md` with the phased design template (including 2-3 decision scaffolds)
-5. Display problem inline
+5. Add a row to the Problem Index table in `README.md`: `| Micro | NNN | [Problem Title] |`. Insert in numerical order among Micro rows.
+6. Display problem inline
 
 ## Problem Format
 
