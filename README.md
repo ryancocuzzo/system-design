@@ -18,6 +18,7 @@ To get better at designing systems. Design against constraints, get graded again
 | Micro | 003 | Multi-Tenant Search-as-a-Service |
 | Micro | 004 | Container Image Registry |
 | Micro | 005 | Infrastructure Run Orchestration Platform |
+| Micro | 006 | URL Shortener Service |
 
 ## Tracks
 
@@ -46,9 +47,9 @@ Micro-design scores (updated when you run `/grade` on a micro):
 ```mermaid
 xychart-beta
     title "Micro Scores"
-    x-axis [001, 002, 003, 004, 005]
+    x-axis [001, 002, 003, 004, 005, 006]
     y-axis "Score" 0 --> 10
-    line [3.5, 4, 4.5, 4, 5]
+    line [3.5, 4, 4.5, 4, 5, 3.5]
 ```
 
 ## Workflow (Cursor Commands)
