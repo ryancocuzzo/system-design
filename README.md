@@ -20,6 +20,7 @@ To get better at designing systems. Design against constraints, get graded again
 | Micro | 005 | Infrastructure Run Orchestration Platform |
 | Micro | 006 | URL Shortener Service |
 | Micro | 007 | Instagram Photo Feed Service |
+| Micro | 008 | Real-Time Fraud Decisioning Pipeline |
 
 ## Tracks
 
