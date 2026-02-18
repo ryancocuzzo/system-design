@@ -168,3 +168,29 @@ I was under the impression we just had some inference component we could lean on
 **Your impression:** "Call inference synchronously" is Option B. The question isn't "can we do that?" — we can. The question is whether B is better than A (inline) or C (async) for this system. Given the constraint (must return a deterministic fallback within 200ms if dependencies fail), the payment flow is synchronous — the issuer is waiting. So the real choice is A vs B. C is only viable if the business accepts deferred reconciliation.
 
 **Why B often wins:** A dedicated fraud service gives you isolation (fraud outages don't take down payment), bounded timeouts (payment can enforce 80ms and fall back), and independent scaling. Inlining (A) is simpler but couples everything and makes fallback harder — if the payment process hangs on a feature fetch, you can't easily "fail open" without process-level timeouts.
+
+Q: Question 3 asks the below:
+
+> ### Decision 3: Where should short-lived risk state and deduplication state live?
+
+> - **A.** In-memory key-value cluster with TTL-based risk state and idempotency keys
+> - **B.** Stream processor managed state with changelog-backed recovery
+> - **C.** Wide-column store keyed by account/device with time-bucketed rows
+
+I think I partially understand the question, but I am definitely unsure on how to reason about the design. I'm assuming that features are being stored in an online feature store (e.g redis). Upon assessment, we could cache the per-feature risk assessment with a TTL in redis. We could also have cache our final event risk result for that event in redis (also, with an ETL) where the event id is the key and treated as an Idempotency key. Beyond that, I'm not sure how to approach the ask here. I don't know much about wide-column stores nor how they'd apply here. I don't know how a stream processor's state could be leveraged here.
+My core gap in understanding is in what the stream processor can do and also how wide-column stores work.
+Explain simple and briefly.
+
+**Answer:**
+
+**What the question is asking:** "Short-lived risk state" = intermediate data used to compute or serve risk decisions: window aggregates in flight, cached decisions for recent events, or similar. "Deduplication state" = have we already processed this event? (idempotency). The question is where to store these — not the final feature store (Redis for features), but the supporting state that prevents double-counting and enables correct aggregations.
+
+**Option A (Redis + TTL):** Idempotency: `SET event_id:{id} "processed" EX 3600` — before processing, check; if exists, skip. Risk state: cache recent decisions or intermediate values with TTL. Simple, fast, but Redis is a separate system; if it's down, you lose dedup. TTL handles expiry.
+
+**Option B (Stream processor state):** The stream processor (Flink, etc.) has built-in state — keyed by entity, holding window aggregates and "seen" event IDs. Changelog-backed = state is persisted to Kafka so the processor can recover after failure. Dedup: processor checks its state for `event_id` before applying; if seen, skip. Risk state = the window state (counts, sums) the processor already maintains. No separate Redis for dedup; it's inside the processor. The processor still writes *output* (features) to Redis; the question is where *internal* state lives.
+
+**Option C (Wide-column store):** Cassandra/HBase. Row key = `account_id` or `(account_id, time_bucket)`. Columns = `event_id`, `count`, `amount`, etc. Time-bucketed = each row is a 5-min or 1-hour slice; you range-scan over rows to get "last 30 min." Good for durable, queryable history. Heavier than Redis; typically used when you need range scans over time and strong durability, not just fast key lookups.
+
+**Stream processor in one sentence:** It consumes events, maintains keyed state (aggregates, seen IDs), and emits results — all without a separate DB for that state.
+
+**Wide-column in one sentence:** Rows have many columns; you partition by key (e.g. account) and optionally by time bucket; good for time-range queries over large datasets.
